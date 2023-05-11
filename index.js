@@ -5,7 +5,7 @@ import { registerValidation } from "./validators.js";
 import checkAuth from "./utils/checkAuth.js";
 import { getMe, login, register } from "./controllers/UserController.js";
 import {createRoom, createTeams, getRoom, joinRoom} from "./controllers/RoomController.js";
-import {createGame, getGame, setComment} from "./controllers/GameController.js";
+import {createGame, getGame, getGamesByRoomId, setComment} from "./controllers/GameController.js";
 import {answer, getAnswers, guess, nextRound} from "./controllers/AnswerController.js";
 
 mongoose.connect('mongodb+srv://vladislavrepkin:lGp4cg5yzaEKsIJT@cluster0.enbmkuo.mongodb.net/blog?retryWrites=true&w=majority')
@@ -25,6 +25,8 @@ app.get('/room', getRoom);
 app.post('/joinRoom', joinRoom);
 app.post('/teams', createTeams);
 app.post('/game', createGame);
+app.get('/gameByRoomId', getGamesByRoomId);
+
 app.post('/comment', setComment);
 app.get('/game', getGame);
 app.post('/answer', answer);

@@ -3,6 +3,7 @@ import {getCode} from "../utils/getCode.js";
 import AnswerModel from "../models/Answer.js";
 import GameModel from "../models/Game.js";
 import RoomModel from "../models/Room.js";
+import {getWords} from "../utils/getWords.js";
 
 export const answer = async (req, res) => {
     try {
@@ -110,9 +111,16 @@ export const nextRound = async (req, res) => {
             return res.status(400).json(errors.array())
         }
 
+        const { team_1, team_2 } = await RoomModel.findById(req.body.roomId);
+
        const { round } = await GameModel.findById(req.body.gameId);
         if (req.body.curRound === round) {
+            const updatedCurPlayers = round === 0 ? {
+                    team_1_player: team_1[Math.floor(Math.random() * team_1.length)],
+                    team_2_player: team_2[Math.floor(Math.random() * team_2.length)],
+                } : {};
             await GameModel.findByIdAndUpdate(req.body.gameId, {
+                ...updatedCurPlayers,
                 $inc: {
                     round: 1
                 }

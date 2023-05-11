@@ -78,9 +78,7 @@ export const createTeams = async (req, res) => {
         const team_1 = users.slice(0, divideIndex);
         const team_2 = users.slice(divideIndex);
         await RoomModel.updateOne({ _id: req.body.id }, { team_1, team_2 });
-        res.json({
-            success: true
-        });
+        res.json({ team_1, team_2 });
 
     } catch (err) {
         res.status(500).json({

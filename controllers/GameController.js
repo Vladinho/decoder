@@ -3,7 +3,6 @@ import GameModel from "../models/Game.js";
 import {getWords} from "../utils/getWords.js";
 import {getCode} from "../utils/getCode.js";
 import RoomModel from "../models/Room.js";
-import AnswerModel from "../models/Answer.js";
 
 export const createGame = async (req, res) => {
     try {
@@ -15,8 +14,6 @@ export const createGame = async (req, res) => {
         const { team_1, team_2 } = await RoomModel.findById(req.body.roomId);
         const doc = new GameModel({
             roomId: req.body.roomId,
-            team_1_player: team_1[Math.floor(Math.random() * team_1.length)],
-            team_2_player: team_2[Math.floor(Math.random() * team_2.length)],
             team_1_code: getCode(),
             team_2_code: getCode(),
             words_1: getWords(4),
@@ -48,10 +45,8 @@ export const setComment = async (req, res) => {
             }
         })
        await GameModel.findByIdAndUpdate(req.body.gameId, {
-           comment_1: req.body.comment_1,
-           comment_2: req.body.comment_2,
-           comment_3: req.body.comment_3,
-           comment_4: req.body.comment_4,
+           comments_1: req.body.comments_1,
+           comments_2: req.body.comments_2,
        });
 
         res.json({
@@ -71,6 +66,25 @@ export const getGame = async (req, res) => {
         const game = await GameModel.findById(req.query.id);
         res.json(game);
 
+    } catch (err) {
+        res.status(500).json({
+            message: 'get game is failed'
+        })
+    }
+}
+
+export const getGamesByRoomId = async (req, res) => {
+    try {
+        const game = await GameModel.findOne({
+            roomId: req.query.id
+        });
+        if (game) {
+            res.json(game);
+        } else {
+            res.json({
+                message: 'No game'
+            });
+        }
     } catch (err) {
         res.status(500).json({
             message: 'get game is failed'
