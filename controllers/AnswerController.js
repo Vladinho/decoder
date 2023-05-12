@@ -13,19 +13,6 @@ export const answer = async (req, res) => {
         }
 
         const { round } = await GameModel.findById(req.body.gameId);
-        const { team_1, team_2 } = await RoomModel.findById(req.body.roomId);
-        const is1Team = team_1.some(i => i === req.body.user);
-        const curTeam = is1Team ? team_1 : team_2;
-        const nextIndex = curTeam.indexOf(req.body.user) + 1;
-        const nextPlayer = curTeam[nextIndex === curTeam.length ? 0 : nextIndex];
-        const newGame = is1Team ? {
-            team_1_player: nextPlayer,
-            team_1_code: getCode()
-        } : {
-            team_2_player: nextPlayer,
-            team_2_code: getCode()
-        }
-       await GameModel.findByIdAndUpdate(req.body.gameId, newGame);
         const doc = new AnswerModel({
             round,
             gameId: req.body.gameId,
@@ -34,7 +21,9 @@ export const answer = async (req, res) => {
             code: req.body.code
         });
         await doc.save();
-        res.json(newGame);
+        res.json({
+            success: true
+        });
 
     } catch (err) {
         console.log(err);
@@ -69,29 +58,34 @@ export const guess = async (req, res) => {
         const is1Team = team_1.some(i => i === req.body.user);
         if (req.body.guess) {
             await AnswerModel.findByIdAndUpdate(req.body.answerId, is1Team ? {
-                team_1_guess: req.body.guess
+                team_1_guess: req.body.guess,
+                team_1_agree: [],
             } : {
-                team_2_guess: req.body.guess
+                team_2_guess: req.body.guess,
+                team_2_agree: [],
             });
         }
-        if (req.body.agree) {
+        const { team_1_agree, team_2_agree } = await AnswerModel.findById(req.body.answerId);
+
+        console.log(team_1_agree, team_2_agree)
+        if (req.body.agree && !team_1_agree.some(i => i === req.body.user) && !team_2_agree.some(i => i === req.body.user)) {
             await AnswerModel.findByIdAndUpdate(req.body.answerId, {
-                $push: is1Team ? {
+                $addToSet: is1Team ? {
                     team_1_agree: req.body.user
                 } : {
                     team_2_agree: req.body.user
                 }
             });
         }
-        if (req.body.agree) {
-            await AnswerModel.findByIdAndUpdate(req.body.answerId, {
-                $push: is1Team ? {
-                    team_1_agree: req.body.user
-                } : {
-                    team_2_agree: req.body.user
-                }
-            });
-        }
+        // if (req.body.agree) {
+        //     await AnswerModel.findByIdAndUpdate(req.body.answerId, {
+        //         $push: is1Team ? {
+        //             team_1_agree: req.body.user
+        //         } : {
+        //             team_2_agree: req.body.user
+        //         }
+        //     });
+        // }
         res.json({
             success: true
         });
@@ -112,15 +106,19 @@ export const nextRound = async (req, res) => {
         }
 
         const { team_1, team_2 } = await RoomModel.findById(req.body.roomId);
+        const { team_1_player, team_2_player } = await GameModel.findById(req.body.gameId);
 
        const { round } = await GameModel.findById(req.body.gameId);
+        const team_1_next_player_index = team_1.indexOf(team_1_player) + 1;
+        const team_2_next_player_index =  team_2.indexOf(team_2_player) + 1;
+
+        const team_1_next_player = team_1[team_1_next_player_index === team_1.length ? 0 : team_1_next_player_index]
+        const team_2_next_player = team_2[team_2_next_player_index === team_2.length ? 0 : team_2_next_player_index]
+
         if (req.body.curRound === round) {
-            const updatedCurPlayers = round === 0 ? {
-                    team_1_player: team_1[Math.floor(Math.random() * team_1.length)],
-                    team_2_player: team_2[Math.floor(Math.random() * team_2.length)],
-                } : {};
             await GameModel.findByIdAndUpdate(req.body.gameId, {
-                ...updatedCurPlayers,
+                team_1_player: team_1_next_player,
+                team_2_player: team_2_next_player,
                 $inc: {
                     round: 1
                 }
