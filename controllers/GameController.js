@@ -33,21 +33,19 @@ export const createGame = async (req, res) => {
 
 export const setComment = async (req, res) => {
     try {
-        const comments = {
-            comment_1: req.body.comment_1,
-            comment_2: req.body.comment_2,
-            comment_3: req.body.comment_3,
-            comment_4: req.body.comment_4,
-        };
-        Object.keys((key) => {
-            if (comments[key] === undefined) {
-                delete comments[key];
-            }
-        })
-       await GameModel.findByIdAndUpdate(req.body.gameId, {
-           comments_1: req.body.comments_1,
-           comments_2: req.body.comments_2,
-       });
+        const { comments_1, comments_2 } = await GameModel.findById(req.body.gameId);
+        if (req.body.comments_1 && req.body.comments_1.length) {
+            const user = req.body.comments_1[0].split('__')[0];
+            await GameModel.findByIdAndUpdate(req.body.gameId, {
+                comments_1: [...comments_1.filter(i => i.indexOf(user) !== 0), ...req.body.comments_1],
+            });
+        }
+        if (req.body.comments_2) {
+            const user = req.body.comments_2[0].split('__')[0];
+            await GameModel.findByIdAndUpdate(req.body.gameId, {
+                comments_2: [...comments_2.filter(i => i.indexOf(user) !== 0), ...req.body.comments_2],
+            });
+        }
 
         res.json({
             success: true

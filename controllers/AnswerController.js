@@ -119,6 +119,8 @@ export const nextRound = async (req, res) => {
             await GameModel.findByIdAndUpdate(req.body.gameId, {
                 team_1_player: team_1_next_player,
                 team_2_player: team_2_next_player,
+                team_1_code: getCode(),
+                team_2_code: getCode(),
                 $inc: {
                     round: 1
                 }
@@ -132,6 +134,45 @@ export const nextRound = async (req, res) => {
         console.log(err);
         res.status(500).json({
             message: 'nextRound registration is failed!'
+        })
+    }
+}
+
+export const reset = async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json(errors.array())
+        }
+
+        await AnswerModel.find({
+            gameId: req.body.gameId
+        }).deleteMany();
+
+        const a = await AnswerModel.find({
+            gameId: req.body.gameId
+        });
+        console.log('a!!!!!', a)
+        const { team_1, team_2 } = await RoomModel.findById(req.body.roomId);
+        await GameModel.findByIdAndUpdate(req.body.gameId, {
+            team_1_player: team_1[0],
+            team_2_player: team_2[0],
+            team_1_code: getCode(),
+            team_2_code: getCode(),
+            words_1: getWords(4),
+            words_2: getWords(4),
+            comments_1: [],
+            comments_2: [],
+            round: 1
+        });
+
+        res.json({
+            success: true
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'reset registration is failed!'
         })
     }
 }

@@ -7,17 +7,14 @@ const RoomSchema = new mongoose.Schema({
     team_1: [{
         type: String,
         required: true,
-        unique: true
     }],
     team_2: [{
         type: String,
         required: true,
-        unique: true
     }],
     users: [{
         type: String,
         required: true,
-        unique: true
     }],
 }, {
     timestamps: true
