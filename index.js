@@ -49,7 +49,8 @@ app.post('/reset', reset);
 app.get('/', (req, res) => {
     res.json({
         success,
-        errorDb
+        errorDb,
+        test: '1'
     });
 });
 
