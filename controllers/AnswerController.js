@@ -152,7 +152,6 @@ export const reset = async (req, res) => {
         const a = await AnswerModel.find({
             gameId: req.body.gameId
         });
-        console.log('a!!!!!', a)
         const { team_1, team_2 } = await RoomModel.findById(req.body.roomId);
         await GameModel.findByIdAndUpdate(req.body.gameId, {
             team_1_player: team_1[0],

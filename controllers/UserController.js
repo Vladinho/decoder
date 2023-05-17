@@ -52,8 +52,6 @@ export const login = async (req, res) => {
             });
         }
 
-        console.log(req.body.password, user._doc.passwordHash)
-
         const isValidPass = await bcrypt.compare(req.body.password, user._doc.passwordHash);
 
         if (!isValidPass) {
