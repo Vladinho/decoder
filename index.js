@@ -8,7 +8,7 @@ import {createRoom, createTeams, getRoom, getRooms, joinRoom} from "./controller
 import {createGame, getGame, getGamesByRoomId, setComment} from "./controllers/GameController.js";
 import {answer, getAnswers, guess, nextRound, reset} from "./controllers/AnswerController.js";
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://vladislavrepkin:lGp4cg5yzaEKsIJT@cluster0.enbmkuo.mongodb.net/blog?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://vladislavrepkin:lGp4cg5yzaEKsIJT@cluster0.enbmkuo.mongodb.net/blog?retryWrites=true&w=majority')
     .then(() => console.log('db - ok!'))
     .catch(() => console.log('db - error!'));
 
