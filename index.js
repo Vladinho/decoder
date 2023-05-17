@@ -15,9 +15,9 @@ mongoose.connect('mongodb+srv://vladislavrepkin:lGp4cg5yzaEKsIJT@cluster0.enbmku
 const app = express();
 
 app.use(express.json());
-app.use(cors({
-    origin: '*'
-}));
+// app.use(cors({
+//     origin: '*'
+// }));
 
 app.post('/auth/register', registerValidation, register);
 app.post('/room', createRoom);
