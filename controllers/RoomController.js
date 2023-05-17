@@ -71,7 +71,7 @@ export const getRooms = async (req, res) => {
 
     } catch (err) {
         res.status(500).json({
-            message: 'get room is failed'
+            message: 'get rooms is failed' + `${JSON.stringify(err)}`
         })
     }
 }
