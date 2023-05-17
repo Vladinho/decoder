@@ -4,11 +4,11 @@ import cors from 'cors'
 import { registerValidation } from "./validators.js";
 import checkAuth from "./utils/checkAuth.js";
 import { getMe, login, register } from "./controllers/UserController.js";
-import {createRoom, createTeams, getRoom, joinRoom} from "./controllers/RoomController.js";
+import {createRoom, createTeams, getRoom, getRooms, joinRoom} from "./controllers/RoomController.js";
 import {createGame, getGame, getGamesByRoomId, setComment} from "./controllers/GameController.js";
 import {answer, getAnswers, guess, nextRound, reset} from "./controllers/AnswerController.js";
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://vladislavrepkin:lGp4cg5yzaEKsIJT@cluster0.enbmkuo.mongodb.net/blog?retryWrites=true&w=majority')
     .then(() => console.log('db - ok!'))
     .catch(() => console.log('db - error!'));
 
@@ -21,6 +21,7 @@ app.use(cors({
 
 app.post('/auth/register', registerValidation, register);
 app.post('/room', createRoom);
+app.get('/rooms', getRooms);
 app.get('/room', getRoom);
 app.post('/joinRoom', joinRoom);
 app.post('/teams', createTeams);

@@ -64,6 +64,18 @@ export const getRoom = async (req, res) => {
     }
 }
 
+export const getRooms = async (req, res) => {
+    try {
+        const rooms = await RoomModel.find();
+        res.json(rooms);
+
+    } catch (err) {
+        res.status(500).json({
+            message: 'get room is failed'
+        })
+    }
+}
+
 
 export const createTeams = async (req, res) => {
     try {
