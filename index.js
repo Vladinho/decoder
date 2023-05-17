@@ -8,9 +8,19 @@ import {createRoom, createTeams, getRoom, getRooms, joinRoom} from "./controller
 import {createGame, getGame, getGamesByRoomId, setComment} from "./controllers/GameController.js";
 import {answer, getAnswers, guess, nextRound, reset} from "./controllers/AnswerController.js";
 
+let success = false;
+let errorDb = null;
+
 mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://vladislavrepkin:lGp4cg5yzaEKsIJT@cluster0.enbmkuo.mongodb.net/blog?retryWrites=true&w=majority')
-    .then(() => console.log('db - ok!'))
-    .catch(() => console.log('db - error!'));
+    .then(() => {
+        success = true;
+        console.log('db - ok!')
+    })
+    .catch((e) => {
+        success = false;
+        errorDb = e;
+        console.log('db - error!')
+    });
 
 const app = express();
 
@@ -37,7 +47,10 @@ app.post('/nextRound', nextRound);
 app.post('/reset', reset);
 
 app.get('/', (req, res) => {
-    res.send('111Hello world! 2');
+    res.json({
+        success,
+        errorDb
+    });
 });
 
 app.get('/auth/me', checkAuth, getMe);
