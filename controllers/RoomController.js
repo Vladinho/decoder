@@ -30,16 +30,26 @@ export const createRoom = async (req, res) => {
 
 export const joinRoom = async (req, res) => {
     try {
-        const room = await RoomModel.updateOne({ _id: req.body.id }, {
-           $addToSet: {
-               users: req.body.user
-           }
-        });
+
+        const room = await RoomModel.findById(req.body.id);
+
         if (!room) {
             return res.status(404).json({
                 message: 'No room'
             });
         }
+
+        if (room?.team_1?.length && room?.team_2?.length && !room?.team_1?.some(i => i === req.body.user) && !room?.team_2?.some(i => i === req.body.user)) {
+            return res.status(404).json({
+                message: 'The game has already been started!'
+            });
+        }
+
+        await RoomModel.findByIdAndUpdate(req.body.id, {
+           $addToSet: {
+               users: req.body.user
+           }
+        });
 
         res.json({
             success: true

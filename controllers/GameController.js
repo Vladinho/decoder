@@ -2,7 +2,6 @@ import {validationResult} from "express-validator";
 import GameModel from "../models/Game.js";
 import {getWords} from "../utils/getWords.js";
 import {getCode} from "../utils/getCode.js";
-import RoomModel from "../models/Room.js";
 
 export const createGame = async (req, res) => {
     try {
@@ -11,7 +10,6 @@ export const createGame = async (req, res) => {
             return res.status(400).json(errors.array())
         }
 
-        const { team_1, team_2 } = await RoomModel.findById(req.body.roomId);
         const doc = new GameModel({
             roomId: req.body.roomId,
             team_1_code: getCode(),
