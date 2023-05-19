@@ -28,7 +28,7 @@ export const answer = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'game registration is failed!'
+            message: 'game registration is failed!' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }
@@ -42,7 +42,7 @@ export const getAnswers = async (req, res) => {
 
     } catch (err) {
         res.status(500).json({
-            message: 'get game is failed'
+            message: 'get game is failed' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }
@@ -77,15 +77,6 @@ export const guess = async (req, res) => {
                 }
             });
         }
-        // if (req.body.agree) {
-        //     await AnswerModel.findByIdAndUpdate(req.body.answerId, {
-        //         $push: is1Team ? {
-        //             team_1_agree: req.body.user
-        //         } : {
-        //             team_2_agree: req.body.user
-        //         }
-        //     });
-        // }
         res.json({
             success: true
         });
@@ -93,7 +84,7 @@ export const guess = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'game registration is failed!'
+            message: 'game registration is failed!' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }
@@ -133,7 +124,7 @@ export const nextRound = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'nextRound registration is failed!'
+            message: 'nextRound registration is failed!' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }
@@ -171,7 +162,7 @@ export const reset = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'reset registration is failed!'
+            message: 'reset registration is failed!' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }

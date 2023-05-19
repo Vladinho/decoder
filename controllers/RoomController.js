@@ -23,7 +23,7 @@ export const createRoom = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'room registration is failed!'
+            message: 'room registration is failed!' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }
@@ -57,7 +57,7 @@ export const joinRoom = async (req, res) => {
 
     } catch (err) {
         res.status(500).json({
-            message: 'room join is failed'
+            message: 'room join is failed' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }
@@ -69,7 +69,7 @@ export const getRoom = async (req, res) => {
 
     } catch (err) {
         res.status(500).json({
-            message: 'get room is failed'
+            message: 'get room is failed' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }
@@ -81,7 +81,7 @@ export const getRooms = async (req, res) => {
 
     } catch (err) {
         res.status(500).json({
-            message: 'get rooms is failed' + `${JSON.stringify(err)}`
+            message: 'get rooms is failed' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }
@@ -104,7 +104,7 @@ export const createTeams = async (req, res) => {
 
     } catch (err) {
         res.status(500).json({
-            message: 'createTeams join is failed'
+            message: 'createTeams join is failed' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }

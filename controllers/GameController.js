@@ -24,7 +24,7 @@ export const createGame = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'game registration is failed!'
+            message: 'game registration is failed!' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }
@@ -52,7 +52,7 @@ export const setComment = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'game registration is failed!'
+            message: 'game registration is failed!' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }
@@ -64,7 +64,7 @@ export const getGame = async (req, res) => {
 
     } catch (err) {
         res.status(500).json({
-            message: 'get game is failed'
+            message: 'get game is failed' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }
@@ -83,7 +83,7 @@ export const getGamesByRoomId = async (req, res) => {
         }
     } catch (err) {
         res.status(500).json({
-            message: 'get game is failed'
+            message: 'get game is failed' + `${err ? JSON.stringify(err) : ''}`
         })
     }
 }
