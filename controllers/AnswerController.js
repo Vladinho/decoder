@@ -59,10 +59,10 @@ export const guess = async (req, res) => {
         if (req.body.guess) {
             await AnswerModel.findByIdAndUpdate(req.body.answerId, is1Team ? {
                 team_1_guess: req.body.guess,
-                team_1_agree: [],
+                team_1_agree: [req.body.user],
             } : {
                 team_2_guess: req.body.guess,
-                team_2_agree: [],
+                team_2_agree: [req.body.user],
             });
         }
         const { team_1_agree, team_2_agree } = await AnswerModel.findById(req.body.answerId);
