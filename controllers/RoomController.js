@@ -97,8 +97,8 @@ export const createTeams = async (req, res) => {
         }
         const users = shuffle(room.users);
         const divideIndex = Math.floor(users.length / 2);
-        const team_1 = users.slice(0, divideIndex);
-        const team_2 = users.slice(divideIndex);
+        const team_1 = req.body.team_1 || users.slice(0, divideIndex);
+        const team_2 = req.body.team_2 || users.slice(divideIndex);
         await RoomModel.updateOne({ _id: req.body.id }, { team_1, team_2 });
         res.json({ team_1, team_2 });
 
