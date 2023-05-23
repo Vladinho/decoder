@@ -11,7 +11,7 @@ import {answer, getAnswers, guess, nextRound, reset} from "./controllers/AnswerC
 let success = null;
 let errorDb = null;
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://vladislavrepkin:lGp4cg5yzaEKsIJT@cluster0.enbmkuo.mongodb.net/blog?retryWrites=true&w=majority')
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
         success = true;
         console.log('db - ok!')
