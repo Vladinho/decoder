@@ -16,6 +16,10 @@ const RoomSchema = new mongoose.Schema({
         type: String,
         required: true,
     }],
+    roomId: {
+        type: Number,
+        required: false,
+    },
 }, {
     timestamps: true
 });

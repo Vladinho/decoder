@@ -1,6 +1,8 @@
 import {validationResult} from "express-validator";
 import RoomModel from "../models/Room.js";
 import shuffle from "../utils/shuffle.js";
+import getRandomRoomId from "../utils/getRandomRoomId.js";
+import findRoom from "../utils/findRoom.js";
 
 export const createRoom = async (req, res) => {
     try {
@@ -9,11 +11,14 @@ export const createRoom = async (req, res) => {
             return res.status(400).json(errors.array())
         }
 
+        const roomId = await getRandomRoomId();
+
         const doc = new RoomModel({
             mainUser: req.body.user,
             team_1: [],
             team_2: [],
-            users: [req.body.user]
+            users: [req.body.user],
+            roomId
         })
 
         const room = await doc.save();
@@ -30,8 +35,7 @@ export const createRoom = async (req, res) => {
 
 export const joinRoom = async (req, res) => {
     try {
-
-        const room = await RoomModel.findById(req.body.id);
+        const room = await findRoom(req.body.id);
 
         if (!room) {
             return res.status(404).json({
@@ -45,15 +49,13 @@ export const joinRoom = async (req, res) => {
             });
         }
 
-        await RoomModel.findByIdAndUpdate(req.body.id, {
+        await RoomModel.findByIdAndUpdate(room._id, {
            $addToSet: {
                users: req.body.user
            }
         });
 
-        res.json({
-            success: true
-        });
+        res.json(room);
 
     } catch (err) {
         res.status(500).json({
@@ -64,7 +66,13 @@ export const joinRoom = async (req, res) => {
 
 export const getRoom = async (req, res) => {
     try {
-        const room = await RoomModel.findById(req.query.id);
+        let room = null;
+        if (req.query.id.length > 4) {
+            room = await RoomModel.findById(req.query.id);
+        } else {
+            room = await RoomModel.findOne({ roomId: Number(req.query.id) })
+        }
+
         res.json(room);
 
     } catch (err) {

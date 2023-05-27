@@ -50,7 +50,6 @@ app.get('/', (req, res) => {
     res.json({
         success,
         errorDb,
-        test: '1'
     });
 });
 
