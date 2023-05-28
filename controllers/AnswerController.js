@@ -12,13 +12,19 @@ export const answer = async (req, res) => {
             return res.status(400).json(errors.array())
         }
 
-        const { round } = await GameModel.findById(req.body.gameId);
+        const { round, roomId } = await GameModel.findById(req.body.gameId);
+        const { team_1, team_2 } = await RoomModel.findById(roomId);
+        const isTeam1 = team_1.some(i => i === req.body.user);
         const doc = new AnswerModel({
             round,
             gameId: req.body.gameId,
             answer:  req.body.answer,
             user: req.body.user,
-            code: req.body.code
+            code: req.body.code,
+            ...(round === 1 ? {
+                [`team_${isTeam1 ? 2 : 1}_guess`]: '---',
+                [`team_${isTeam1 ? 2 : 1}_agree`]: isTeam1 ? team_2 : team_1
+            } : {})
         });
         await doc.save();
         res.json({
