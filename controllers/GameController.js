@@ -2,6 +2,7 @@ import {validationResult} from "express-validator";
 import GameModel from "../models/Game.js";
 import {getWords} from "../utils/getWords.js";
 import {getCode} from "../utils/getCode.js";
+import WsProvider from "../websokets.js";
 
 export const createGame = async (req, res) => {
     try {
@@ -48,6 +49,10 @@ export const setComment = async (req, res) => {
         res.json({
             success: true
         });
+
+        new WsProvider().clients[req.body.roomId].forEach((ws) => {
+            ws.send('update game')
+        })
 
     } catch (err) {
         console.log(err);

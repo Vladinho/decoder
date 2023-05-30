@@ -4,6 +4,7 @@ import AnswerModel from "../models/Answer.js";
 import GameModel from "../models/Game.js";
 import RoomModel from "../models/Room.js";
 import {getWords} from "../utils/getWords.js";
+import WsProvider from "../websokets.js";
 
 export const answer = async (req, res) => {
     try {
@@ -30,6 +31,9 @@ export const answer = async (req, res) => {
         res.json({
             success: true
         });
+        new WsProvider().clients[req.body.roomId].forEach((ws) => {
+            ws.send('update answers')
+        })
 
     } catch (err) {
         console.log(err);
@@ -87,6 +91,10 @@ export const guess = async (req, res) => {
             success: true
         });
 
+        new WsProvider().clients[req.body.roomId].forEach((ws) => {
+            ws.send('update answers')
+        })
+
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -127,6 +135,10 @@ export const nextRound = async (req, res) => {
         res.json({
             nextRound: (await GameModel.findById(req.body.gameId)).round
         });
+
+        new WsProvider().clients[req.body.roomId].forEach((ws) => {
+            ws.send('update game')
+        })
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -165,6 +177,10 @@ export const reset = async (req, res) => {
         res.json({
             success: true
         });
+
+        new WsProvider().clients[req.body.roomId].forEach((ws) => {
+            ws.send('update room')
+        })
     } catch (err) {
         console.log(err);
         res.status(500).json({
