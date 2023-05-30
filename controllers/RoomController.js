@@ -3,6 +3,7 @@ import RoomModel from "../models/Room.js";
 import shuffle from "../utils/shuffle.js";
 import getRandomRoomId from "../utils/getRandomRoomId.js";
 import findRoom from "../utils/findRoom.js";
+import WsProvider from "../websokets.js";
 
 export const createRoom = async (req, res) => {
     try {
@@ -56,6 +57,12 @@ export const joinRoom = async (req, res) => {
         });
 
         res.json(room);
+
+        console.log(new WsProvider().clients, req.body.id)
+
+        new WsProvider().clients[room._id]?.forEach((ws) => {
+            ws.send('update room')
+        })
 
     } catch (err) {
         res.status(500).json({
