@@ -4,7 +4,7 @@ import * as url from 'url';
 class WsProvider {
     constructor() {
         if (!WsProvider._instance) {
-            this.wss = new WebSocketServer({ port: process.env.PORT || 7071 });
+            this.wss = new WebSocketServer({ port: 7071 });
             this.clients = {};
             this.wss.on('connection', this.onConnection)
             WsProvider._instance = this
