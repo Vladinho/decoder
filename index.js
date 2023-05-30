@@ -7,9 +7,7 @@ import { getMe, login, register } from "./controllers/UserController.js";
 import {createRoom, createTeams, getRoom, getRooms, joinRoom} from "./controllers/RoomController.js";
 import {createGame, getGame, getGamesByRoomId, setComment} from "./controllers/GameController.js";
 import {answer, getAnswers, guess, nextRound, reset} from "./controllers/AnswerController.js";
-import WsProvider from "./websokets.js";
 
-new WsProvider();
 let success = null;
 let errorDb = null;
 
